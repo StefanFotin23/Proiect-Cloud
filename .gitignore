@@ -1,0 +1,5 @@
+*.jar
+dockerfile/auth/*.jar
+dockerfile/backend/*.jar
+dockerfile/backend/backend.jar
+dockerfile/auth/auth.jar
