@@ -1,0 +1,5 @@
+dockerfile/backend/backend.jar
+dockerfile/auth/auth.jar
+/dockerfile/frontend/*
+terraform/.terraform
+!/dockerfile/frontend/dist/
