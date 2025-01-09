@@ -22,8 +22,8 @@ resource "kubernetes_deployment" "auth" {
 
       spec {
         container {
-          name  = "auth"
-          image = var.auth_image
+          name  = "auth-container"
+          image = "${var.docker_username}/${var.docker_repo}-auth"
 
           port {
             container_port = 8080
@@ -42,6 +42,17 @@ resource "kubernetes_deployment" "auth" {
       }
     }
   }
+}
+
+# Define the namespace for the auth service
+resource "kubernetes_namespace" "auth" {
+  metadata {
+    name = "auth"
+  }
+}
+
+output "service_name" {
+  value = kubernetes_service.auth_service.metadata[0].name
 }
 
 resource "kubernetes_service" "auth_service" {

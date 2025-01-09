@@ -1,0 +1,64 @@
+resource "kubernetes_namespace" "adminer" {
+  metadata {
+    name = "adminer-${var.database_name}"  # Create a unique namespace for each Adminer instance
+  }
+}
+
+resource "kubernetes_deployment" "adminer" {
+  metadata {
+    name      = "adminer-${var.database_name}"
+    namespace = kubernetes_namespace.adminer.metadata[0].name
+  }
+
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "adminer-${var.database_name}"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "adminer-${var.database_name}"
+        }
+      }
+
+      spec {
+        container {
+          name  = "adminer-${var.database_name}-container"
+          image = "adminer"
+
+          env {
+            name  = "ADMINER_DEFAULT_SERVER"
+            value = var.database_name  # Use the database name as the server
+          }
+
+          port {
+            container_port = 8080  # Adminer typically runs on port 8080 inside the container
+          }
+        }
+      }
+    }
+  }
+}
+
+resource "kubernetes_service" "adminer_service" {
+  metadata {
+    name      = "adminer-${var.database_name}"
+    namespace = kubernetes_namespace.adminer.metadata[0].name
+  }
+
+  spec {
+    selector = {
+      app = "adminer-${var.database_name}"
+    }
+
+    port {
+      port        = var.adminer_port      # Expose the dynamic port to the outside
+      target_port = 8080                  # Map to the container's 8080 port
+    }
+  }
+}
