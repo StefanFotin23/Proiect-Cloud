@@ -2,7 +2,7 @@
 FROM nginx:alpine
 
 # Step 2: Copy the compiled Angular app into Nginx's default directory
-COPY ./frontend/dist/hr-connect-fe /usr/share/nginx/html
+COPY ./dockerfile/frontend/dist/hr-connect-fe /usr/share/nginx/html
 
 # Step 3: Expose the port that Nginx will serve the app on (default is 80)
 EXPOSE 80

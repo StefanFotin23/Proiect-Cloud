@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY /backend/backend.jar app.jar
+COPY ./dockerfile/backend/backend.jar app.jar
 
 # Expose the application port
 EXPOSE 8082

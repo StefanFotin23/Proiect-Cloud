@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 
 # Copy the JAR file into the container
-COPY /auth/auth.jar app.jar
+COPY ./dockerfile/auth/auth.jar app.jar
 
 # Expose the application port
 EXPOSE 8080

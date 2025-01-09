@@ -5,6 +5,10 @@ resource "kubernetes_namespace" "frontend" {
   }
 }
 
+output "service_name" {
+  value = kubernetes_service.frontend_service.metadata[0].name
+}
+
 # Define the deployment for the frontend service
 resource "kubernetes_deployment" "frontend" {
   metadata {
@@ -31,7 +35,7 @@ resource "kubernetes_deployment" "frontend" {
       spec {
         container {
           name  = "frontend-container"
-          image = "your-frontend-image"  # Replace with your frontend Docker image
+          image = "${var.docker_username}/${var.docker_repo}-frontend"
           port {
             container_port = 80
           }

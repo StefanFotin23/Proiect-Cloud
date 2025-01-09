@@ -1,7 +1,13 @@
-resource "kubernetes_deployment" "auth_database" {
+resource "kubernetes_namespace" "database" {
   metadata {
-    name      = "auth-database"
-    namespace = kubernetes_namespace.auth.metadata[0].name
+    name = var.database_name
+  }
+}
+
+resource "kubernetes_deployment" "database" {
+  metadata {
+    name      = var.database_name
+    namespace = kubernetes_namespace.database.metadata[0].name
   }
 
   spec {
@@ -9,25 +15,25 @@ resource "kubernetes_deployment" "auth_database" {
 
     selector {
       match_labels = {
-        app = "auth-database"
+        app = var.database_name
       }
     }
 
     template {
       metadata {
         labels = {
-          app = "auth-database"
+          app = var.database_name
         }
       }
 
       spec {
         container {
-          name  = "auth-database"
-          image = var.mysql_image
+          name  = "${var.database_name}-container"
+          image = "${var.docker_username}/${var.docker_repo}-${var.database_name}"
 
           env {
             name  = "MYSQL_DATABASE"
-            value = "auth"
+            value = "auth"  # Change if needed (make it dynamic if required)
           }
 
           env {
@@ -40,15 +46,15 @@ resource "kubernetes_deployment" "auth_database" {
   }
 }
 
-resource "kubernetes_service" "auth_database_service" {
+resource "kubernetes_service" "database_service" {
   metadata {
-    name      = "auth-database"
-    namespace = kubernetes_namespace.auth.metadata[0].name
+    name      = var.database_name
+    namespace = kubernetes_namespace.database.metadata[0].name
   }
 
   spec {
     selector = {
-      app = "auth-database"
+      app = var.database_name
     }
 
     port {
