@@ -9,9 +9,7 @@ volumes:
 
 services:
   frontend:
-    build:
-      context: ./dockerfile
-      dockerfile: frontend.Dockerfile
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}-frontend
     container_name: frontend
     ports:
       - "80:80"
@@ -22,11 +20,10 @@ services:
     depends_on:
       - auth
       - backend
+    restart: always
 
   auth:
-    build:
-      context: ./dockerfile
-      dockerfile: auth.Dockerfile
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}-auth
     container_name: auth
     ports:
       - 8080:8080
@@ -45,9 +42,7 @@ services:
     restart: always
 
   backend:
-    build:
-      context: ./dockerfile
-      dockerfile: backend.Dockerfile
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}-backend
     container_name: backend
     ports:
       - 8082:8082
@@ -66,9 +61,7 @@ services:
     restart: always
 
   backend_database:
-    build:
-      context: ./dockerfile
-      dockerfile: database.Dockerfile
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}-database
     container_name: backend_database
     environment:
       - MYSQL_DATABASE=${DB_NAME}
@@ -82,9 +75,7 @@ services:
     restart: always
     
   auth_database:
-    build:
-      context: ./dockerfile
-      dockerfile: database.Dockerfile
+    image: ${DOCKER_USERNAME}/${DOCKER_REPO}-database
     container_name: auth_database
     environment:
       - MYSQL_DATABASE=${DB_NAME}
